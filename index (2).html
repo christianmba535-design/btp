@@ -1,0 +1,115 @@
+<!doctype html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1f33"><title>SolidCalc BTP</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#17212b}
+header{background:#0b1f33;color:#fff;padding:calc(18px + env(safe-area-inset-top)) 16px 18px;position:sticky;top:0;z-index:5}.brand{font-size:22px;font-weight:800}.sub{opacity:.75;font-size:12px}
+main{max-width:900px;margin:auto;padding:16px}.hero,.panel{background:#fff;border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 4px 18px #0001}
+h1{margin:0 0 8px;font-size:25px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:#fff;border:1px solid #e3e8ed;border-radius:16px;padding:16px;cursor:pointer}.card b{display:block;font-size:16px;margin:8px 0}.card span{font-size:28px}
+.panel{display:none}.panel.active{display:block}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:13px;font-weight:700}input,select{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #cfd7df;border-radius:10px;font-size:16px}
+button{border:0;border-radius:10px;padding:12px 16px;background:#f28c28;color:#fff;font-weight:700}.result{margin-top:14px;padding:14px;border-radius:12px;background:#eef5fb;font-weight:700;line-height:1.7}
+.box{background:#f8fafc;border:1px solid #e3e8ed;border-radius:14px;padding:14px;margin:12px 0}
+.line{border:1px solid #e3e8ed;border-radius:12px;padding:12px;margin-bottom:8px;background:#fff}.line b{display:block;margin-bottom:4px}.line small{color:#5b6773;display:block}.line .tot{font-weight:800;margin-top:6px}
+.mini{padding:8px 12px;font-size:13px;background:#e8edf2;color:#17212b;margin:8px 8px 0 0}.mini.del{background:#fde8e8;color:#b42318}
+.sec{background:#0b1f33}.ghost{background:#e8edf2;color:#17212b}.totals{margin-top:12px;padding:14px;border-radius:12px;background:#0b1f33;color:#fff;line-height:1.9}.totals .ttc{font-size:20px;color:#f28c28;font-weight:800}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="brand">SOLIDCALC BTP</div><div class="sub">L'art de construire avec méthode</div></header>
+<main><section class="hero"><h1>Calculs de construction</h1><p>Base mobile pour les métrés et calculs courants du BTP.</p></section>
+<div class="grid">
+<div class="card" onclick="openPanel('beton')"><span>🧱</span><b>Béton</b><small>Volume, dosage, ciment</small></div>
+<div class="card" onclick="openPanel('hourdis')"><span>🏗️</span><b>Poutrelles-hourdis</b><small>Hourdis, entraxe, nervures</small></div>
+<div class="card" onclick="openPanel('fer')"><span>🔩</span><b>Ferraillage</b><small>Nombre de barres</small></div>
+<div class="card" onclick="openPanel('mac')"><span>🧱</span><b>Maçonnerie</b><small>Surface, agglos</small></div>
+<div class="card" onclick="openPanel('esc')"><span>🪜</span><b>Escaliers</b><small>Calcul et variantes</small></div>
+<div class="card" onclick="openPanel('devis')"><span>💰</span><b>Devis</b><small>À développer</small></div></div>
+
+<section id="beton" class="panel"><h2>Béton</h2><div class="row">
+<div><label>Longueur (m)</label><input id="bl" type="number" step=".01"></div><div><label>Largeur (m)</label><input id="bw" type="number" step=".01"></div>
+<div><label>Épaisseur (m)</label><input id="bh" type="number" step=".01"></div><div><label>Dosage (kg/m³)</label><input id="bd" type="number" value="350"></div></div>
+<button onclick="beton()">Calculer</button><div id="br" class="result"></div></section>
+
+<section id="hourdis" class="panel"><h2>Poutrelles–hourdis</h2><p>Les hourdis sont posés dans le sens de la <b>plus petite portée</b>.</p><div class="row">
+<div><label>Portée L (m)</label><input id="hl" type="number" step=".01"></div><div><label>Portée l (m)</label><input id="hw" type="number" step=".01"></div>
+<div><label>Longueur hourdis (cm)</label><input id="hh" type="number" value="50"></div><div><label>Appui par côté (cm)</label><input id="ha" type="number" value="4"></div>
+<div><label>Largeur nervure (cm)</label><input id="hn" type="number" value="15"></div></div>
+<button onclick="hourdis()">Calculer automatiquement</button><div id="hr" class="result"></div></section>
+
+<section id="fer" class="panel"><h2>Ferraillage — nombre de barres</h2><div class="row">
+<div><label>Linéaire total (m)</label><input id="fl" type="number" step=".01"></div><div><label>Longueur d'une barre (m)</label><input id="fb" type="number" value="12"></div></div>
+<button onclick="fer()">Calculer</button><div id="fr" class="result"></div></section>
+
+<section id="mac" class="panel"><h2>Maçonnerie</h2><div class="row">
+<div><label>Longueur mur (m)</label><input id="ml" type="number"></div><div><label>Hauteur mur (m)</label><input id="mh" type="number"></div>
+<div><label>Longueur agglo (cm)</label><input id="ma" type="number" value="40"></div><div><label>Hauteur agglo (cm)</label><input id="mb" type="number" value="20"></div></div>
+<button onclick="mac()">Calculer</button><div id="mr" class="result"></div></section>
+
+<section id="esc" class="panel"><h2>Escaliers</h2><label>Type</label><select id="et"><option>Escalier droit</option><option>Quart tournant</option><option>Balancé avec palier</option><option>Balancé sans palier</option></select>
+<div class="row"><div><label>Hauteur à franchir (m)</label><input id="eh" type="number" step=".01"></div><div><label>Hauteur cible (m)</label><input id="er" type="number" value=".17" step=".01"></div></div>
+<button onclick="esc()">Calculer</button><div id="erx" class="result"></div></section>
+<section id="devis" class="panel"><h2>Devis</h2>
+<div class="row"><div><label>Projet / client</label><input id="dp" type="text" placeholder="Ex : Villa M. Dupont" oninput="dsave()"></div>
+<div><label>Date</label><input id="dd" type="date" oninput="dsave()"></div></div>
+<div class="box"><label>Ouvrage</label><input id="do" type="text" list="ouvrages" placeholder="Choisir ou écrire un ouvrage" oninput="dauto()">
+<datalist id="ouvrages"></datalist>
+<div class="row"><div><label>Unité</label><select id="du"><option>m³</option><option>m²</option><option>ml</option><option>kg</option><option>sac</option><option>u</option><option>forfait</option></select></div>
+<div><label>Quantité</label><input id="dq" type="number" step=".01" inputmode="decimal"></div></div>
+<label>Prix unitaire (FCFA)</label><input id="dpu" type="number" step="1" inputmode="decimal">
+<button id="dbtn" onclick="dadd()">Ajouter la ligne</button> <button id="dcancel" class="ghost" style="display:none" onclick="dreset()">Annuler</button></div>
+<div id="dl"></div>
+<div class="row"><div><label>TVA (%)</label><input id="dtva" type="number" step=".01" value="19.25" oninput="dsave()"></div>
+<div><label>Remise (%)</label><input id="drem" type="number" step=".01" value="0" oninput="dsave()"></div></div>
+<div id="dt" class="totals"></div>
+<button class="sec" onclick="dshare()" style="margin:12px 8px 0 0">Partager / envoyer</button><button class="ghost" onclick="dcopy()" style="margin:12px 8px 0 0">Copier</button><button class="mini del" onclick="dclear()" style="margin-top:12px">Vider le devis</button>
+</section>
+</main>
+<script>
+function openPanel(id){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));let p=document.getElementById(id);p.classList.add('active');p.scrollIntoView({behavior:'smooth',block:'start'})}
+function n(id){return parseFloat(document.getElementById(id).value)||0}
+function beton(){let v=n('bl')*n('bw')*n('bh'),s=v*n('bd')/50;document.getElementById('br').innerHTML=`Volume : ${v.toFixed(3)} m³<br>Ciment théorique : ${s.toFixed(1)} sacs de 50 kg`}
+function hourdis(){let L=n('hl'),l=n('hw'),h=n('hh'),a=n('ha'),nw=n('hn'),petite=Math.min(L,l),grande=Math.max(L,l),utile=h-2*a,entraxe=utile+nw,nr=Math.ceil(grande*100/entraxe),nh=Math.ceil(petite*100/h);document.getElementById('hr').innerHTML=`Sens de pose : ${petite===L?'L':'l'} (plus petite portée)<br>Largeur utile : ${utile.toFixed(1)} cm<br>Entraxe indicatif : ${entraxe.toFixed(1)} cm<br>Nervures/poutrelles : ${nr}<br>Hourdis par ligne (approx.) : ${nh}`}
+function fer(){let total=n('fl'),bar=n('fb'),q=Math.ceil(total/bar);document.getElementById('fr').innerHTML=`Nombre de barres : ${q}<br>Linéaire disponible : ${(q*bar).toFixed(2)} m<br>Chute théorique : ${(q*bar-total).toFixed(2)} m`}
+function mac(){let s=n('ml')*n('mh'),u=n('ma')/100*n('mb')/100,q=Math.ceil(s/u);document.getElementById('mr').innerHTML=`Surface : ${s.toFixed(2)} m²<br>Quantité indicative : ${q} agglos`}
+function esc(){let H=n('eh'),r=n('er'),m=Math.max(1,Math.ceil(H/r)),rr=H/m,g=.63-2*rr;document.getElementById('erx').innerHTML=`Nombre de hauteurs : ${m}<br>Hauteur réelle : ${(rr*100).toFixed(1)} cm<br>Giron selon Blondel : ${(g*100).toFixed(1)} cm<br>Type : ${document.getElementById('et').value}`}
+
+var OUV={"Terrassement en fouilles":["m³",6000],"Béton de propreté":["m³",75000],"Béton armé fondations":["m³",165000],"Béton armé poteaux et poutres":["m³",185000],"Dalle à hourdis":["m²",24000],"Fourniture et pose d'acier":["kg",1100],"Coffrage":["m²",8000],"Maçonnerie d'agglos de 15":["m²",8500],"Maçonnerie d'agglos de 20":["m²",10000],"Enduit ciment":["m²",4500],"Chape":["m²",5000],"Carrelage":["m²",12000],"Peinture":["m²",3500],"Escalier en béton armé":["forfait",0]};
+var DV={p:"",d:"",tva:19.25,rem:0,l:[]},DEDIT=-1,DKEY="solidcalc_devis";
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(x){return Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ")}
+function dinit(){var dl=document.getElementById("ouvrages");dl.innerHTML=Object.keys(OUV).map(function(k){return '<option value="'+esc(k)+'">'}).join("");
+try{var r=localStorage.getItem(DKEY);if(r){var o=JSON.parse(r);if(o&&Array.isArray(o.l))DV=o}}catch(e){}
+document.getElementById("dp").value=DV.p||"";document.getElementById("dd").value=DV.d||new Date().toISOString().slice(0,10);
+document.getElementById("dtva").value=DV.tva;document.getElementById("drem").value=DV.rem;drender()}
+function dsave(){DV.p=document.getElementById("dp").value;DV.d=document.getElementById("dd").value;DV.tva=n("dtva");DV.rem=n("drem");
+try{localStorage.setItem(DKEY,JSON.stringify(DV))}catch(e){}drender()}
+function dauto(){var v=document.getElementById("do").value;if(OUV[v]){document.getElementById("du").value=OUV[v][0];if(OUV[v][1]&&!n("dpu"))document.getElementById("dpu").value=OUV[v][1]}}
+function dreset(){DEDIT=-1;["do","dq","dpu"].forEach(function(i){document.getElementById(i).value=""});document.getElementById("du").selectedIndex=0;
+document.getElementById("dbtn").textContent="Ajouter la ligne";document.getElementById("dcancel").style.display="none"}
+function dadd(){var nom=document.getElementById("do").value.trim(),q=n("dq"),pu=n("dpu");
+if(!nom){alert("Indique le nom de l'ouvrage.");return}if(q<=0){alert("La quantité doit être supérieure à 0.");return}
+var ligne={o:nom,u:document.getElementById("du").value,q:q,pu:pu};
+if(DEDIT>=0)DV.l[DEDIT]=ligne;else DV.l.push(ligne);dreset();dsave()}
+function dedit(i){var x=DV.l[i];DEDIT=i;document.getElementById("do").value=x.o;document.getElementById("du").value=x.u;
+document.getElementById("dq").value=x.q;document.getElementById("dpu").value=x.pu;
+document.getElementById("dbtn").textContent="Modifier la ligne";document.getElementById("dcancel").style.display="inline-block";
+document.getElementById("do").scrollIntoView({behavior:"smooth",block:"center"})}
+function ddel(i){if(!confirm("Supprimer cette ligne ?"))return;DV.l.splice(i,1);if(DEDIT===i)dreset();dsave()}
+function dclear(){if(!DV.l.length||!confirm("Vider tout le devis ?"))return;DV.l=[];dreset();dsave()}
+function dcalc(){var ht=0;DV.l.forEach(function(x){ht+=x.q*x.pu});var rem=ht*DV.rem/100,net=ht-rem,tva=net*DV.tva/100;return{ht:ht,rem:rem,net:net,tva:tva,ttc:net+tva}}
+function drender(){var L=document.getElementById("dl");
+L.innerHTML=DV.l.length?DV.l.map(function(x,i){return '<div class="line"><b>'+(i+1)+". "+esc(x.o)+'</b><small>'+x.q+" "+esc(x.u)+" × "+fmt(x.pu)+' FCFA</small><div class="tot">'+fmt(x.q*x.pu)+' FCFA</div><button class="mini" onclick="dedit('+i+')">Modifier</button><button class="mini del" onclick="ddel('+i+')">Supprimer</button></div>'}).join(""):'<p style="color:#5b6773">Aucune ligne pour le moment. Ajoute un premier ouvrage ci-dessus.</p>';
+var t=dcalc();document.getElementById("dt").innerHTML="Total HT : "+fmt(t.ht)+" FCFA"+(DV.rem>0?"<br>Remise ("+DV.rem+" %) : −"+fmt(t.rem)+" FCFA<br>Net HT : "+fmt(t.net)+" FCFA":"")+"<br>TVA ("+DV.tva+" %) : "+fmt(t.tva)+' FCFA<br><span class="ttc">Total TTC : '+fmt(t.ttc)+" FCFA</span>"}
+function dtext(){var t=dcalc(),o="DEVIS — SOLIDCALC BTP\nSolid Construction by MBA TANKOU Christian\n";
+if(DV.p)o+="Projet : "+DV.p+"\n";if(DV.d)o+="Date : "+DV.d+"\n";o+="\n";
+DV.l.forEach(function(x,i){o+=(i+1)+". "+x.o+"\n   "+x.q+" "+x.u+" × "+fmt(x.pu)+" = "+fmt(x.q*x.pu)+" FCFA\n"});
+o+="\nTotal HT : "+fmt(t.ht)+" FCFA\n";if(DV.rem>0)o+="Remise ("+DV.rem+" %) : -"+fmt(t.rem)+" FCFA\nNet HT : "+fmt(t.net)+" FCFA\n";
+o+="TVA ("+DV.tva+" %) : "+fmt(t.tva)+" FCFA\nTOTAL TTC : "+fmt(t.ttc)+" FCFA";return o}
+function dcopy(){if(!DV.l.length){alert("Le devis est vide.");return}var t=dtext();
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){alert("Devis copié.")},function(){prompt("Copie le texte :",t)})}else prompt("Copie le texte :",t)}
+function dshare(){if(!DV.l.length){alert("Le devis est vide.");return}var t=dtext(),S=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Share;
+if(S){S.share({title:"Devis SolidCalc BTP",text:t,dialogTitle:"Envoyer le devis"}).catch(function(){})}
+else if(navigator.share){navigator.share({title:"Devis SolidCalc BTP",text:t}).catch(function(){})}else dcopy()}
+dinit();
+</script></body></html>
